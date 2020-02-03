@@ -120,6 +120,7 @@ dmypy.json
 .pyre/
 
 # Environment specific resources for the project
- ./resources/ecg_data
+ .resources/
  *.zip
  *.csv
+ *.png
