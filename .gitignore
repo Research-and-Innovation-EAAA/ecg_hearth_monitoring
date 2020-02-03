@@ -120,7 +120,9 @@ dmypy.json
 .pyre/
 
 # Environment specific resources for the project
- .resources/
- *.zip
- *.csv
- *.png
+.resources/ecg_data
+*.zip
+*.csv
+*.png
+eksport.xml
+export_cda.xml
