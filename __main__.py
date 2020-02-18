@@ -1,72 +1,28 @@
 import os
-import numpy as np
 
-import services.modifiers.Extractor as extract
-import services.preprocessors.DataPrune as dp
 import services.modifiers.Loader as loader
-import services.preprocessors.TrainingPreparer as tp
-import services.displayers.Graph as display
+import services.displayers.Graph as displayer
 
-import ML.Activity_ml as aml
+res_path = "C:\\Users\\mabh\\Desktop\\Workspace_development\\ECG Hearth Monitoring\\resources\\physionet"
 
-comp_res_path = ".\\resources\\ecg_data.zip"
+res_folders = os.listdir(res_path)
 
-try:
-    extract.extract(comp_res_path)
-except Exception:
-    pass
+fantasia_res = os.listdir(os.path.join(res_path, res_folders[0]))
+ltaf_res = os.listdir(os.path.join(res_path, res_folders[1]))
+nsr = os.listdir(os.path.join(res_path, res_folders[2]))
 
-base_res_location = os.path.join('.', 'resources', 'ecg_data', 'apple_health_export', 'electrocardiograms')
+for folder_elem in res_folders:
+    temp_path = os.path.join(res_path, folder_elem)
 
-resource_names = os.listdir(base_res_location)
+    for res_elem in os.listdir(os.path.join(temp_path)):
+        temp_res_load = loader.load_data(os.path.join(temp_path, res_elem))
 
-for res_name in resource_names:
-    temp_res_path = os.path.join(base_res_location, res_name)
+        print(temp_res_load.count())
 
-    if os.path.isfile(temp_res_path):
-        dp.remove_redundant_info(temp_res_path, 'Apple Health Data')
+        x, y, z, = temp_res_load.split('id', '1-led', '2-led')
         
-prepared_dataset_path = os.path.join('.', 'resources', 'ecg_data', 'apple_ecgs')
-prepped_dataset_names = os.listdir(prepared_dataset_path)
+        print(x.count())
+        print(y.count())
+        print(z.count())
 
-prepped_datasets = []
-
-for prep_dataset_name in prepped_dataset_names:
-    temp_prep_ds_path = f"{prepared_dataset_path}\\{prep_dataset_name}"
-
-    if os.path.isfile(temp_prep_ds_path) and (prep_dataset_name != 'training.csv' or prep_dataset_name != 'labels.csv'):
-        prepped_datasets.append(loader.load_data(temp_prep_ds_path))
-
-tp.prep_data(prepped_datasets)
-
-training_set = loader.load_data(f"{prepared_dataset_path}\\training.csv")
-
-print(training_set.count())
-
-labels_path = f"{prepared_dataset_path}\\labels.csv"
-
-define = False
-
-if define:
-    with open(labels_path, 'w') as labels_file:
-        labels_file.write("labels\n")
-
-        for res in prepped_datasets:
-            if len(res.values) >= 15360:
-                display.plot_ecg_data(y_data=res)
-                
-                label_input = input()
-
-                while label_input != '0' and label_input != '1':
-                    label_input = input()
-
-                    print(label_input != '0')
-                    print(label_input != '1')
-                
-                labels_file.write(f"{label_input}\n")
-
-label_set = loader.load_data(f"{prepared_dataset_path}\\labels.csv")
-
-aml.setup_model(training_set, label_set)
-
-#aml.setup_test_model(training_set, label_set)
+        displayer.plot_ecg_data(y_data=temp_res_load, x_scale=13000, y_scale=25000, title=f"{folder_elem}-{res_elem}")

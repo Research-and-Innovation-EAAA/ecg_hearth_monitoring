@@ -1,1 +1,1 @@
-__all__=["NeuralNetwork", "Activity_ml"]
+__all__=["NeuralNetwork", "Activity_ml", "CLAML"]
