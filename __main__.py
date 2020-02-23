@@ -1,28 +1,45 @@
 import os
 
-import services.modifiers.Loader as loader
-import services.displayers.Graph as displayer
+import services.modifiers.Extractor as extractor
+import Physionet.ApplyHeadders as applyer
+import Physionet.SplitData as splitter
 
-res_path = "C:\\Users\\mabh\\Desktop\\Workspace_development\\ECG Hearth Monitoring\\resources\\physionet"
+fantasia_path = 'D:\\Praktik Vinter-Forår 2020\\resources\\fantasia.tar'
+fantasia_ext_loc = 'D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\fantasia'
 
-res_folders = os.listdir(res_path)
+ltafdb_path = 'D:\\Praktik Vinter-Forår 2020\\resources\\ltafdb.tar'
+ltafdb_ext_loc = 'D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\ltaf'
 
-fantasia_res = os.listdir(os.path.join(res_path, res_folders[0]))
-ltaf_res = os.listdir(os.path.join(res_path, res_folders[1]))
-nsr = os.listdir(os.path.join(res_path, res_folders[2]))
+nsrdb_path = 'D:\\Praktik Vinter-Forår 2020\\resources\\nsrdb.tar'
+nrsdb_ext_loc = 'D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\nsr'
+"""
+extractor.extract(fantasia_path, fantasia_ext_loc, True)
+a1 = applyer.Apply_headders(fantasia_ext_loc, 'sample #', 'RESP', 'ECG', daemon=False)
+a1.start()
 
-for folder_elem in res_folders:
-    temp_path = os.path.join(res_path, folder_elem)
+extractor.extract(ltafdb_path, ltafdb_ext_loc, True)
+a2 = applyer.Apply_headders(ltafdb_ext_loc, 'sample #', 'ECG 1', 'ECG 2', daemon=False)
+a2.start()
 
-    for res_elem in os.listdir(os.path.join(temp_path)):
-        temp_res_load = loader.load_data(os.path.join(temp_path, res_elem))
+extractor.extract(nsrdb_path, nrsdb_ext_loc, True)
+a3 = applyer.Apply_headders(nrsdb_ext_loc, 'sample #', 'ECG 1', 'ECG 2', daemon=False)
+a3.start()
+"""
+target_readings = 7500
 
-        print(temp_res_load.count())
+#a1.join()
+s1 = splitter.Split_data(fantasia_ext_loc, target_readings)
+s1.start()
 
-        x, y, z, = temp_res_load.split('id', '1-led', '2-led')
-        
-        print(x.count())
-        print(y.count())
-        print(z.count())
+#a2.join()
+s2 = splitter.Split_data(ltafdb_ext_loc, target_readings)
+s2.start()
 
-        displayer.plot_ecg_data(y_data=temp_res_load, x_scale=13000, y_scale=25000, title=f"{folder_elem}-{res_elem}")
+#a3.join()
+s3 = splitter.Split_data(nrsdb_ext_loc, target_readings)
+s3.start()
+
+#Split workd done
+s1.join()
+s2.join()
+s3.join()

@@ -1,0 +1,13 @@
+            """
+            with open(f"{target_loc}\\{res_name}_1_lead_split_{index}.csv", 'w') as first_lead:
+                first_lead.write("readings\n")
+
+                for elem in lead_1.values[readings_index: (readings_index + readings + 1)]:
+                    first_lead.write(f"{elem[0]}\n")
+            
+            with open(f"{target_loc}\\{res_name}_2_lead_split_{index}.csv", 'w') as second_lead:
+                second_lead.write("readings\n")
+
+                for elem in lead_2.values[readings_index: (readings_index + (hz * interval) + 1)]:
+                    second_lead.write(f"{elem[0]}\n")
+            """

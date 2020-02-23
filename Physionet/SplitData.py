@@ -1,0 +1,74 @@
+import os
+import threading
+import math
+
+import services.modifiers.Loader as loader
+import services.modifiers.Writer as writer
+
+class Split_data(threading.Thread):
+    def __init__(self, target_resources_folder, readings,):
+        threading.Thread.__init__(self)
+
+        self.target_resources_folder = target_resources_folder
+        self.readings = readings
+
+    def run(self):
+        resources = os.listdir(self.target_resources_folder)
+
+        for elem in resources:
+            res_path = os.path.join(self.target_resources_folder, elem)
+
+            if not os.path.isfile(res_path):
+                continue
+            
+            res_data = loader.load_data(res_path)
+
+            target_split_folder = os.path.join(self.target_resources_folder, elem[:-4])
+            os.makedirs(target_split_folder, exist_ok=True)
+
+            self.__process(res_data, self.readings, elem, target_split_folder)
+
+    def __process(self, data, readings, res_name, target_loc):
+        sample_nr, ecg, other = self.__split(data)
+        split_index = 0
+        readings_index = 0
+
+        while readings_index < len(sample_nr):
+            end_index = readings_index + readings + 1
+
+            target_folder = target_loc#os.path.join(target_loc, res_name)
+
+            self.__save(ecg, readings_index, end_index, target_folder, split_index, "ecg")
+            self.__save(other, readings_index, end_index, target_folder, split_index, "other")
+            
+            split_index += 1
+            readings_index += readings + 1
+    
+    def __split(self, data):
+        try:
+            sample_nr = data.drop(columns=['ECG', 'RESP'], axis=1)
+            ecg = data.drop(['ECG', 'sample #'], axis=1)
+            other = data.drop(['RESP', 'sample #'], axis=1)
+        except Exception:
+            pass
+
+        try:
+            sample_nr = data.drop(columns=['ECG 1', 'ECG 2'], axis=1)
+            ecg = data.drop(['ECG 2', 'sample #'], axis=1)
+            other = data.drop(['ECG 1', 'sample #'], axis=1)
+        except Exception:
+            pass
+
+        return sample_nr, ecg, other
+
+    def __save(self, data, start_index, end_index, target_folder, index, name):
+       # os.makedirs(target_folder, exist_ok=True)
+
+        with open(f"{target_folder}\\{name}_split_{index}.csv", 'w') as first_lead:
+            first_lead.write("readings\n")
+
+            for elem in data.values[start_index: end_index]:
+                first_lead.write(f"{elem[0]}\n")
+
+    def __dir_prep(self, target_loc):
+        os.makedirs(target_loc, exist_ok=True)
