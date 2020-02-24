@@ -1,3 +1,4 @@
+"""
 import os
 
 import services.modifiers.Extractor as extractor
@@ -44,3 +45,10 @@ s2.start()
 #s1.join()
 s2.join()
 #s3.join()
+"""
+
+import Physionet.MachineLearningModel as mlm
+
+model = mlm.setup_model()
+
+model.compile(optimization='adam', loss='mse', metrics=['accuracy'])

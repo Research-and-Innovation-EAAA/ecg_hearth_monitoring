@@ -86,8 +86,6 @@ class Split_data(threading.Thread):
         return sample_nr, ecg, other
 
     def __save(self, data, start_index, end_index, target_folder, index, name):
-       # os.makedirs(target_folder, exist_ok=True)
-
         with open(f"{target_folder}\\{name}_split_{index}.csv", 'w') as first_lead:
             first_lead.write("readings\n")
 
