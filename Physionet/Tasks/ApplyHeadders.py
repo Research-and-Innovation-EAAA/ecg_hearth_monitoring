@@ -1,7 +1,9 @@
 import os
 import threading
 
-class Apply_headders(threading.Thread):
+import services.pipelines.Task as task
+
+class Apply_headders(threading.Thread, task.Task):
     def __init__(self, ressource_path, *args, daemon=False):
         super().__init__(daemon=daemon)
 

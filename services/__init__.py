@@ -1,1 +1,1 @@
-__all__=["preprocessors", "modifiers", "displayers"]
+__all__=["preprocessors", "modifiers", "displayers", "pipelines"]
