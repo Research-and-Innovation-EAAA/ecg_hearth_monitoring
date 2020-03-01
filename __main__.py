@@ -1,4 +1,3 @@
-import Physionet.TrainingComp as tp
 """
 import os
 
@@ -69,8 +68,10 @@ training_1.join()
 training_2.join()
 training_3.join()
 
-"""
+
 
 import services.pipelines.Task as task
 
-task_1 = task.Task()
+task_1 = task.Task()"""
+
+import Physionet.PipelineTest

@@ -21,6 +21,8 @@ def setup_model(inputs):
 
     model_layer = keras.layers.BatchNormalization()(model_layer)
     model_layer = keras.activations.relu(model_layer)
+    
+    
     model_layer = keras.layers.Dense(12)(model_layer)
     output = keras.layers.Softmax(name="ECG-model-output")(model_layer)
 

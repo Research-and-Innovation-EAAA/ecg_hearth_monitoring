@@ -1,10 +1,10 @@
-from abc import ABCMeta
+import abc
 
-class Task(ABCMeta):
-    @classmethod
-    def exec(self, action):
+class Task(abc.ABC):
+    @abc.abstractmethod
+    def exec(self, task_input, task_output):
         pass
 
-    @classmethod
-    def revese(self, action):
+    @abc.abstractmethod
+    def reverse(self, task_input, task_output):
         pass

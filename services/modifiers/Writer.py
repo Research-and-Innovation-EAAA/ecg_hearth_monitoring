@@ -1,11 +1,15 @@
-def save(datasets=None, path=None, set_length=-1):
+def save(datasets=None, path=None):
     with open(path, 'w') as file:
-        for x in range(0, set_length):
+        for x in range(0, len(datasets)):
             file.write(f'x_{x}')
                 
-            if x < set_length:
+            if x < len(datasets):
                 file.write(',')
         
+        file.write('\n')
+        file.write(datasets)
+        
+        """
         for res_elem in datasets:
             index = 0
             file.write('\n')
@@ -21,3 +25,4 @@ def save(datasets=None, path=None, set_length=-1):
                     continue
             
             file.write('\n')
+        """
