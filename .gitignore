@@ -122,6 +122,7 @@ dmypy.json
 # Environment specific resources for the project
 .resources/ecg_data
 *.zip
+*.tar
 *.csv
 *.png
 eksport.xml
