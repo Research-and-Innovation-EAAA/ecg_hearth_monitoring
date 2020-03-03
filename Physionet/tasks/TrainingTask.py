@@ -87,5 +87,7 @@ class TrainingTask(Task.Task):
             training_path = os.path_join(training_path, path_split[x])
 
         training_path = os.path_join(training_path, "training")
-        
+
+        os.makedirs(training_path, True)
+
         return os.path_join(training_path, f"{path_split[len(path_split) - 1]}.csv")

@@ -1,4 +1,4 @@
-import Physionet.PipelineTest
+import Physionet.PhysionetPipeline
 """
 import Physionet.MachineLearningModel as ml
 

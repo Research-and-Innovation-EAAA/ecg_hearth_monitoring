@@ -1,19 +1,19 @@
-import services.Pipeline as pl
+import services.pipelines.Task as task
 import services.os.Operations as os
 
-class LabelTask(pl.Pipeline):
-    def execute(self, task_input, task_output):
-        training_loc, training_labels_loc = self._calc_labels_loc(task_output["trainin_loc"])
+class LabelTask(task.Task):
+    def exec(self, task_input, task_output):
+        training_loc, training_labels_loc = self._calc_labels_loc(task_output["training_loc"])
         test_loc, test_labels_loc = self._calc_labels_loc(task_output["training_test_loc"])
 
-        self._create_labels_file(training_labels_loc, trainin_loc)
+        self._create_labels_file(training_labels_loc, training_loc, task_input['target_label'])
 
-        self._create_labels_file(test_labels_loc, test_loc)
+        self._create_labels_file(test_labels_loc, test_loc, task_input['target_label'])
     
     def reverse(self, task_input, task_output):
-        pass
+        print("Label task reverse  does nothing!")
     
-    def _calc_labels_loc(path):
+    def _calc_labels_loc(self, path):
         splitted = path.split("\\")
 
         path = ""
@@ -25,8 +25,8 @@ class LabelTask(pl.Pipeline):
 
         return path, os.path_join(path, path_name)
     
-    def _create_labels_file(self, label_loc, datasets_loc):
-        with open(labels_loc, 'w') as labels:
+    def _create_labels_file(self, label_loc, datasets_loc, target_label):
+        with open(label_loc, 'w') as labels:
             labels.write("target")
 
             with open(datasets_loc) as data_sets:
@@ -34,4 +34,4 @@ class LabelTask(pl.Pipeline):
                 data_set = data_sets.readline()
 
                 while(data_set != ""):
-                    labels.write(f"{task_input["target_label"]}")
+                    labels.write(f"{target_label}")

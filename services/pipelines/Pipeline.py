@@ -1,4 +1,5 @@
 import threading
+import datetime
 
 class Pipeline:
     def __init__(self, tasks):
@@ -21,6 +22,8 @@ class _Pipeline(threading.Thread):
 
         output = {}
 
+        print(self.to_process["name"], "starting at", datetime.datetime.now().time())
+
         try:
             for task in self.tasks:
                 print(task)
@@ -30,6 +33,8 @@ class _Pipeline(threading.Thread):
         except Exception as e:
             print(e)
             self._unravel_(tasks_performed, output)
+        
+        print(self.to_process["name"], "ending at", datetime.datetime.now().time())
         
     def _unravel_(self, tasks, output):
         print("Does nothing")

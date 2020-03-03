@@ -95,7 +95,7 @@ class SplitTestTask(task.Task):
 
                         training.write(training_copy.readline())
                     
-                    training.readline()
+                    training_copy.readline()
                     index += 1
         
         os.remove_file(copied_file)
