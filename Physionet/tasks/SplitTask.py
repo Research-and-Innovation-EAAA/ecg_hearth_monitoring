@@ -9,6 +9,8 @@ class SplitTask(Task.Task):
         self.data_readings = readings
 
     def exec(self, task_input, task_output):
+        task_output["readings"] = self.data_readings
+
         resources = os.dir_res_list(task_output["res_loc"])
 
         for elem in resources:
@@ -24,8 +26,6 @@ class SplitTask(Task.Task):
 
             self._process(res_data, self.data_readings, elem, target_split_folder)
         
-        task_output.readings = self.data_readings
-
     def _process(self, data, readings, res_name, target_loc):
         sample_nr, ecg, other = self._split_headder_data(data)
         split_index, readings_index = 0, 0
@@ -35,7 +35,6 @@ class SplitTask(Task.Task):
             end_index = readings_index + readings
 
             to_wait.append(self._split_and_save(ecg, readings_index, end_index, target_loc, split_index, f"ecg_{readings}"))
-            to_wait.append(self._split_and_save(other, readings_index, end_index, target_loc, split_index, f"other_{readings}"))
             
             split_index += 1
             readings_index += readings + 1
@@ -51,8 +50,8 @@ class SplitTask(Task.Task):
     def _split_headder_data(self, data):
         try:
             sample_nr = data.drop(columns=['ECG', 'RESP'], axis=1)
-            ecg = data.drop(['ECG', 'sample #'], axis=1)
-            other = data.drop(['RESP', 'sample #'], axis=1)
+            ecg = data.drop(['RESP', 'sample #'], axis=1)
+            other = data.drop(['ECG', 'sample #'], axis=1)
         except Exception:
             sample_nr = data.drop(columns=['ECG 1', 'ECG 2'], axis=1)
             ecg = data.drop(['ECG 2', 'sample #'], axis=1)

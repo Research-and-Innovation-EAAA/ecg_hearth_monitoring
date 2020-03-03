@@ -2,10 +2,9 @@ import services.os.Operations as op
 import services.pipelines.Task as task
 
 class HeaddersTask(task.Task):
-    def __init__(self, *args):
-        self.headders = args
-    
     def exec(self, task_input, task_output):
+        self.headders = task_input["headders"]
+        
         res_loc = task_output["res_loc"]
 
         folder_res = op.dir_res_list(res_loc)

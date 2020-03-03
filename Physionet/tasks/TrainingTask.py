@@ -21,13 +21,14 @@ class TrainingTask(Task.Task):
                 if os.is_path_file(split_dir) and not os.is_dir(split_dir):
                     continue
                 
-                training_sets = self.append_training_set(training, split_dir, os.dir_res_list(split_dir))
-                #training.write(training_sets)
+                self.append_training_set(training, split_dir, os.dir_res_list(split_dir))
+
+                os.remove_dir(split_dir)
 
     def _get_headders(self, readings):
         headders = ""
 
-        for elem in range(0, readings):
+        for elem in range(1, readings):
             headders = f"{headders}x_{elem}"
 
             if elem < (readings):
@@ -36,8 +37,6 @@ class TrainingTask(Task.Task):
         return f"{headders}\n"
 
     def append_training_set(self, file, path, ressources):
-        
-
         for res_elem in ressources:
             training_data = ""
             
@@ -49,13 +48,13 @@ class TrainingTask(Task.Task):
             temp_data = loader.load_data(res_path)
 
             if self._is_missing_inputs(len(temp_data.values)):
+                os.remove_file(res_path)
                 continue
 
-            print(res_elem)
             training_data = self._append_data_set(training_data, temp_data)
             file.write(training_data)
-        
-        return training_data
+
+            os.remove_file(res_path)
     
     def _is_ecg(self, path):
         return path.find('ecg') >= 0
@@ -86,7 +85,6 @@ class TrainingTask(Task.Task):
 
         for x in range(0, len(path_split) - 1):
             training_path = os.path_join(training_path, path_split[x])
-
 
         training_path = os.path_join(training_path, "training")
         

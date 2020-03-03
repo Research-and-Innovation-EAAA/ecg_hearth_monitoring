@@ -1,9 +1,9 @@
 import random
-import datetime
 
 import services.pipelines.Task as task
 import services.modifiers.Loader as loader
 import services.modifiers.Writer as writer
+import services.os.Operations as os
 
 class SplitTestTask(task.Task):
     def __init__(self, split_rate_train, split_rate_test):
@@ -25,8 +25,9 @@ class SplitTestTask(task.Task):
 
         self._save_test_samples(task_output["training_loc"], training_test_set_path, task_output["readings"], training_indexes)
 
-        #self._save_training_samples(training_indexes)
+        self._save_training_samples(task_output["training_loc"], training_indexes)
 
+        task_output["training_test_loc"] = training_test_set_path
     
     def reverse(self, task_input, task_output):
         return super().reverse(task_input, task_output)
@@ -77,3 +78,24 @@ class SplitTestTask(task.Task):
                         index_at += 1
 
                     test_file.write(read_line)
+    
+    def _save_training_samples(self, rec_loc, indexes):
+        print(rec_loc)
+        copied_file = os.copy_file(rec_loc, "temp.bak")
+
+        index = 0
+
+        with open(copied_file) as training_copy:
+            with open(rec_loc, 'w') as training:
+                training.write(training_copy.readline())
+
+                for elem in indexes:
+                    for _ in range(index, elem):
+                        index += 1
+
+                        training.write(training_copy.readline())
+                    
+                    training.readline()
+                    index += 1
+        
+        os.remove_file(copied_file)
