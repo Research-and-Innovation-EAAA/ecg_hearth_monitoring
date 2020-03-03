@@ -19,20 +19,18 @@ class _Pipeline(threading.Thread):
     def run(self):
         tasks_performed = []
 
-        output = {
-            "res_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\nsr",
-            "readings": 7500,
-            "training_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\nsr_training.csv"
-        }
+        output = {}
 
         try:
             for task in self.tasks:
+                print(task)
                 task.exec(self.to_process, output)
 
-                #tasks_performed.push(task)
+                tasks_performed.insert(0, task)
         except Exception as e:
             print(e)
             self._unravel_(tasks_performed, output)
         
     def _unravel_(self, tasks, output):
         print("Does nothing")
+        pass
