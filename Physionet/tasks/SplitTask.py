@@ -4,8 +4,6 @@ import services.os.Operations as os
 import services.pipelines.Task as Task
 import services.modifiers.Loader as loader
 
-import pandas as pd
-
 class SplitTask(Task.Task):
     def __init__(self, readings):
         self.data_readings = readings
@@ -15,96 +13,118 @@ class SplitTask(Task.Task):
 
         resources = os.dir_res_list(task_output["res_loc"])
 
-        for res_elem in resources:
-            res_path = os.path_join(task_output["res_loc"], res_elem)
+        splitter_threads = []
+
+        for elem in resources:
+            res_path = os.path_join(task_output["res_loc"], elem)
 
             if not os.is_path_file(res_path):
                 continue
-            
-            target_split_folder = os.path_join(task_output["res_loc"], res_elem[:-4])
-            os.makedirs(target_split_folder, True)
 
-            self._split_training_data(res_path, res_elem, target_split_folder)
-    
-    def _split_training_data(self, res_path, res_elem, target_split_folder):
-        to_wait = []
-            
-        with open(res_path) as file:
-            headders_splitted = file.readline().split(',')
-            headder_three = headders_splitted[2].split('\n')[0]
-            
-            temp_read_line = file.readline()
-            split_index = 1
+            splitter = _Splitter(elem, res_path, self.data_readings)
+            splitter.start()
+            splitter_threads.append(splitter)
 
-            while temp_read_line != "":
-                data =  {
-                    headders_splitted[0]:[],
-                    headders_splitted[1]:[],
-                    headder_three:[]
-                }
-
-                for _ in range(0, self.data_readings):
-                    temp_read_line = file.readline()
-                    temp_splitted = temp_read_line.split(",")
-
-                    if temp_read_line != "":
-                        data[headders_splitted[0]].append(int(temp_splitted[0]))
-                        data[headders_splitted[1]].append(int(temp_splitted[1]))
-                        data[headder_three].append(int(temp_splitted[2].split("\\")[0]))
-
-                data = pd.DataFrame(data)
-
-                to_wait.append(self._process(data, self.data_readings, res_elem, target_split_folder, split_index))
-
-                split_index += 1
+            if len(splitter_threads) > 12:
+                for thread in splitter_threads:
+                    thread.join()
+                
+                splitter_threads = []
         
-        for t in to_wait:
-            t.join()
-        
-    def _process(self, data, readings, res_name, target_loc, split_index):
-        _, ecg, _ = self._split_headder_data(data)
-        readings_index = 0
-
-        end_index = readings_index + readings
-
-        t = save_split_data(ecg, readings_index, end_index, target_loc, split_index, f"ecg_{readings}")
-
-        t.start()
-
-        return t
-    
-    def _split_headder_data(self, data):
-        try:
-            sample_nr = data.drop(columns=['ECG', 'RESP'], axis=1)
-            ecg = data.drop(['RESP', 'sample #'], axis=1)
-            other = data.drop(['ECG', 'sample #'], axis=1)
-        except Exception:
-            sample_nr = data.drop(columns=['ECG 1', 'ECG 2'], axis=1)
-            ecg = data.drop(['ECG 2', 'sample #'], axis=1)
-            other = data.drop(['ECG 1', 'sample #'], axis=1)
-
-        return sample_nr, ecg, other
+        for thread in splitter_threads:
+            thread.join()
     
     def reverse(self, task_input, task_output):
-        print("Does nothing")
+        return super().reverse(task_input, task_output)
 
-class save_split_data(threading.Thread):
-    def __init__(self, data, start_index, end_index, target_folder, index, name):
+class _Splitter(threading.Thread):
+    def __init__(self, res_name, res_path, readings):
+        threading.Thread.__init__(self)
+
+        self.containing_folder = res_path
+        self.res_name = res_name[:-4]
+        self.res_path = res_path
+        self.readings = readings
+    
+    def run(self):
+        with open(self.res_path) as file:
+            self._prep_split_folder()
+
+            headers = self._prep_headers(file)
+
+            self._split(file, headers)
+    
+    def _split(self, file, headers):
+        temp_reading = file.readline()
+
+        split_index = 1
+
+        while temp_reading != "":
+            index_at = 0
+            
+            readings = []
+
+            while index_at < self.readings:
+                if temp_reading != "":
+                    readings.append(temp_reading)
+
+                temp_reading = file.readline()
+                
+                index_at += 1
+            
+            split_path = os.path_join(self.containing_folder[:-3], f"{self.readings}_ecg_split_{split_index}.csv")
+
+            split_thread = _Save_split(readings, headers, split_path)
+
+            split_thread.start()
+
+            split_index += 1
+
+    def _prep_split_folder(self):
+        os.makedirs(self.res_path[:-4], True)
+    
+    def _prep_headers(self, file):
+        headers = file.readline().split(',')
+
+        headers[2] = headers[2].split("\n")[0]
+
+        return headers
+
+class _Save_split(threading.Thread):
+    def __init__(self, data, headers, split_path):
         threading.Thread.__init__(self)
 
         self.data = data
-        self.start_index = start_index
-        self.end_index = end_index
-        self.target_folder = target_folder
-        self.index = index
-        self.name = name
+        self.headers = headers
+        self.path = split_path
 
     def run(self):
-        target_loc = os.path_join(self.target_folder, f"{self.name}_split_{self.index}.csv")
-        training_sample = "readings\n"
+        index = self._calc_header_index()
+        ecg_data = self._prep_data(index)
 
-        for elem in self.data.values[self.start_index: self.end_index]:
-            training_sample = f"{training_sample}{elem[0]}\n"
+        with open(self.path, 'w') as file:
+            file.write("readings\n")
 
-        with open(target_loc, 'w') as file:
-            file.write(training_sample)
+            for reading in ecg_data:
+                file.write(f"{reading}\n")
+
+    def _calc_header_index(self):
+        self.headers[2].split("\n")[0]
+
+        index = 0
+
+        for header_elem in self.headers:
+            if header_elem[:-2] == 'ECG' or header_elem == 'ECG':
+                return index
+            
+            index += 1
+
+    def _prep_data(self, index):
+        data_readings = []
+
+        for data_elem in self.data:
+            data_split = data_elem.split(",")
+
+            data_readings.append(data_split[index])
+        
+        return data_readings

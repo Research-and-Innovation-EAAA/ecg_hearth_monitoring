@@ -10,6 +10,8 @@ class Pipeline:
 
         _pipeline.start()
 
+        return _pipeline
+
 class _Pipeline(threading.Thread):
     def __init__(self, tasks, to_process):
         threading.Thread.__init__(self)

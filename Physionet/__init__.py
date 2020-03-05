@@ -1,1 +1,1 @@
-__all__=["PhysionetPipeline"]
+__all__=["DataProcessor"]

@@ -3,7 +3,7 @@ import services.pipelines.Task as Task
 import services.modifiers.Loader as loader
 
 class TrainingTask(Task.Task):
-    def exec(self, task_input, task_output):
+    def _setup(self, task_output):
         self.training_readings = task_output["readings"]
         
         ressources = os.dir_res_list(task_output["res_loc"])
@@ -11,9 +11,19 @@ class TrainingTask(Task.Task):
 
         task_output["training_loc"] = training_data
 
+        backup = self._bakup_saved(training_data)
+
+        return ressources, training_data, backup
+
+    def exec(self, task_input, task_output):
+        ressources, training_data, backup = self._setup(task_output)
+
         with open(training_data, 'w') as training:
-            headders = self._get_headders(task_output["readings"])
-            training.write(headders)
+            if os.is_path_file(backup):
+                self._merge_training(training, backup)
+            else:
+                headders = self._get_headders(task_output["readings"])
+                training.write(headders)
 
             for split_folder in ressources:
                 split_dir = os.path_join(task_output["res_loc"], split_folder) 
@@ -24,6 +34,16 @@ class TrainingTask(Task.Task):
                 self.append_training_set(training, split_dir, os.dir_res_list(split_dir))
 
                 os.remove_dir(split_dir)
+    
+    def _merge_training(self, training, backup):
+        with open(backup) as backup_training:
+            temp = backup_training.readline()
+
+            while temp != "":
+                training.write(temp)
+                temp = backup_training.readline()
+        
+        os.remove_file(backup)
 
     def _get_headders(self, readings):
         headders = ""
@@ -81,13 +101,17 @@ class TrainingTask(Task.Task):
     def _training_loc(self, res_loc):
         path_split = res_loc.split("\\")
 
-        training_path = ""
+        training_path = f"{path_split[0]}\\{path_split[1]}"
 
-        for x in range(0, len(path_split) - 1):
+        for x in range(2, len(path_split) - 1):
             training_path = os.path_join(training_path, path_split[x])
 
         training_path = os.path_join(training_path, "training")
-
-        os.makedirs(training_path, True)
-
+        
         return os.path_join(training_path, f"{path_split[len(path_split) - 1]}.csv")
+
+    def _bakup_saved(self, training_loc):
+        if not os.is_path_file(training_loc):
+            return
+        
+        return os.copy_file(training_loc, "temp.bak")
