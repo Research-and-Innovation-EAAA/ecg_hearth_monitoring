@@ -13,72 +13,118 @@ class SplitTask(Task.Task):
 
         resources = os.dir_res_list(task_output["res_loc"])
 
+        splitter_threads = []
+
         for elem in resources:
             res_path = os.path_join(task_output["res_loc"], elem)
 
             if not os.is_path_file(res_path):
                 continue
-            
-            res_data = loader.load_data(res_path)
 
-            target_split_folder = os.path_join(task_output["res_loc"], elem[:-4])
-            os.makedirs(target_split_folder, True)
+            splitter = _Splitter(elem, res_path, self.data_readings)
+            splitter.start()
+            splitter_threads.append(splitter)
 
-            self._process(res_data, self.data_readings, elem, target_split_folder)
+            if len(splitter_threads) > 12:
+                for thread in splitter_threads:
+                    thread.join()
+                
+                splitter_threads = []
         
-    def _process(self, data, readings, res_name, target_loc):
-        sample_nr, ecg, other = self._split_headder_data(data)
-        split_index, readings_index = 0, 0
-        to_wait = []
-
-        while readings_index < len(sample_nr):
-            end_index = readings_index + readings
-
-            to_wait.append(self._split_and_save(ecg, readings_index, end_index, target_loc, split_index, f"ecg_{readings}"))
-            
-            split_index += 1
-            readings_index += readings + 1
-
-        for t in to_wait:
-            t.join()
-    
-    def _split_and_save(self, readings, readings_index, end_index, target_loc, split_index, name):
-        t = save_split_data(readings, readings_index, end_index, target_loc, split_index, name)
-        t.start()
-        return t
-    
-    def _split_headder_data(self, data):
-        try:
-            sample_nr = data.drop(columns=['ECG', 'RESP'], axis=1)
-            ecg = data.drop(['RESP', 'sample #'], axis=1)
-            other = data.drop(['ECG', 'sample #'], axis=1)
-        except Exception:
-            sample_nr = data.drop(columns=['ECG 1', 'ECG 2'], axis=1)
-            ecg = data.drop(['ECG 2', 'sample #'], axis=1)
-            other = data.drop(['ECG 1', 'sample #'], axis=1)
-
-        return sample_nr, ecg, other
+        for thread in splitter_threads:
+            thread.join()
     
     def reverse(self, task_input, task_output):
-        print("Does nothing")
+        return super().reverse(task_input, task_output)
 
-class save_split_data(threading.Thread):
-    def __init__(self, data, start_index, end_index, target_folder, index, name):
+class _Splitter(threading.Thread):
+    def __init__(self, res_name, res_path, readings):
+        threading.Thread.__init__(self)
+
+        self.containing_folder = res_path
+        self.res_name = res_name[:-4]
+        self.res_path = res_path
+        self.readings = readings
+    
+    def run(self):
+        with open(self.res_path) as file:
+            self._prep_split_folder()
+
+            headers = self._prep_headers(file)
+
+            self._split(file, headers)
+    
+    def _split(self, file, headers):
+        temp_reading = file.readline()
+
+        split_index = 1
+
+        while temp_reading != "":
+            index_at = 0
+            
+            readings = []
+
+            while index_at < self.readings:
+                if temp_reading != "":
+                    readings.append(temp_reading)
+
+                temp_reading = file.readline()
+                
+                index_at += 1
+            
+            split_path = os.path_join(self.containing_folder[:-3], f"{self.readings}_ecg_split_{split_index}.csv")
+
+            split_thread = _Save_split(readings, headers, split_path)
+
+            split_thread.start()
+
+            split_index += 1
+
+    def _prep_split_folder(self):
+        os.makedirs(self.res_path[:-4], True)
+    
+    def _prep_headers(self, file):
+        headers = file.readline().split(',')
+
+        headers[2] = headers[2].split("\n")[0]
+
+        return headers
+
+class _Save_split(threading.Thread):
+    def __init__(self, data, headers, split_path):
         threading.Thread.__init__(self)
 
         self.data = data
-        self.start_index = start_index
-        self.end_index = end_index
-        self.target_folder = target_folder
-        self.index = index
-        self.name = name
+        self.headers = headers
+        self.path = split_path
 
     def run(self):
-        target_loc = os.path_join(self.target_folder, f"{self.name}_split_{self.index}.csv")
-        training_sample = "readings\n"
+        index = self._calc_header_index()
+        ecg_data = self._prep_data(index)
 
-        for elem in self.data.values[self.start_index: self.end_index]:
-            training_sample = f"{training_sample}{elem[0]}\n"
+        with open(self.path, 'w') as file:
+            file.write("readings\n")
 
-        with open(target_loc, 'w') as file:
-            file.write(training_sample)
+            for reading in ecg_data:
+                file.write(f"{reading}\n")
+
+    def _calc_header_index(self):
+        self.headers[2].split("\n")[0]
+
+        index = 0
+
+        for header_elem in self.headers:
+            if header_elem[:-2] == 'ECG' or header_elem == 'ECG':
+                return index
+            
+            index += 1
+
+    def _prep_data(self, index):
+        data_readings = []
+
+        for data_elem in self.data:
+            data_split = data_elem.split(",")
+
+            data_readings.append(data_split[index])
+        
+        return data_readings
