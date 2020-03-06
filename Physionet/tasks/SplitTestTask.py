@@ -80,7 +80,6 @@ class SplitTestTask(task.Task):
                     test_file.write(read_line)
     
     def _save_training_samples(self, rec_loc, indexes):
-        print(rec_loc)
         copied_file = os.copy_file(rec_loc, "temp.bak")
 
         index = 0

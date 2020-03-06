@@ -1,1 +1,1 @@
-__all__=["ExtractTask", "HeaddersTask", "SplitTask", "TrainingTask", "LabelTask"]
+__all__=["ExtractTask", "HeaddersTask", "SplitTask", "TrainingTask", "LabelTask", "PadReadingsTask"]

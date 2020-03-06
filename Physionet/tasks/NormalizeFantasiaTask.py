@@ -15,7 +15,7 @@ class NormalizeFantasiaTask(task.Task):
     
     def _normalize_elements(self, res_elems, task_output):
         for res in res_elems:
-            if "f1" not in res: #or res[:-4] != '.csv':
+            if "f1" not in res:
                 continue
                 
             data = loader.load_data(os.path_join(task_output["res_loc"], res))

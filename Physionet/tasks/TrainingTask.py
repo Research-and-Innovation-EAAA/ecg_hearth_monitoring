@@ -65,15 +65,11 @@ class TrainingTask(Task.Task):
 
             res_path = os.path_join(path, res_elem)
 
-            print(res_path)
-
             temp_data = loader.load_data(res_path)
 
             if self._is_missing_inputs(len(temp_data.values)):
                 os.remove_file(res_path)
                 continue
-
-            print(len(temp_data.values))
 
             training_data = self._append_data_set(training_data, temp_data)
             file.write(training_data)

@@ -16,18 +16,18 @@ class LabelTask(task.Task):
     def _calc_labels_loc(self, path):
         splitted = path.split("\\")
 
-        path = ""
+        label_path = f"{splitted[0]}\\{splitted[1]}"
 
-        for path_elem in range(0, len(splitted) - 1):
-            os.path_join(path, path_elem)
+        for path_elem in range(2, len(splitted) - 1):
+            label_path = os.path_join(label_path, splitted[path_elem])
 
         path_name = f"{splitted[len(splitted) - 1][:-4]}_labels.csv"
 
-        return path, os.path_join(path, path_name)
+        return path, os.path_join(label_path, path_name)
     
     def _create_labels_file(self, label_loc, datasets_loc, target_label):
         with open(label_loc, 'w') as labels:
-            labels.write("target")
+            labels.write("target\n")
 
             with open(datasets_loc) as data_sets:
                 data_sets.readline()
@@ -35,3 +35,7 @@ class LabelTask(task.Task):
 
                 while(data_set != ""):
                     labels.write(f"{target_label}")
+                    data_set = data_sets.readline()
+
+                    if data_set != "":
+                        labels.write('\n')

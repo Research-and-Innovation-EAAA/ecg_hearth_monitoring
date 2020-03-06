@@ -1,8 +1,6 @@
 import Physionet.DataProcessor as pdp
 
 if __name__ == "__main__":
-    print("Main program start!")
-    
     pipeline = pdp.setup_pipeline(7500, 0.8, 0.2)
 
     pre_processers = []
@@ -12,7 +10,10 @@ if __name__ == "__main__":
         "ext_loc": ".\\resources\\physionet\\ltaf",
         "override_policy": True,
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
-        "name":"LTAF"
+        "name":"LTAF",
+        "target_label": 1,
+        "sampled_frequency":250,
+        "target_frequency":256
     }
 
     pre_processers.append(pipeline.execute(to_process))
@@ -22,7 +23,10 @@ if __name__ == "__main__":
         "ext_loc": ".\\resources\\physionet\\nsr",
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "override_policy": True,
-        "name":"NSR"
+        "name":"NSR",
+        "target_label": 0,
+        "sampled_frequency":250,
+        "target_frequency":256
     }
 
     pre_processers.append(pipeline.execute(to_process))
@@ -33,7 +37,9 @@ if __name__ == "__main__":
         "headders": ['sample #', 'RESP', 'ECG'],
         "override_policy": True,
         "name":"Fantasia",
-        "readings":7500
+        "target_label": 0,
+        "sampled_frequency":250,
+        "target_frequency":256
     }
     pre_processers.append(pipeline.execute(to_process))
 
