@@ -6,34 +6,34 @@ if __name__ == "__main__":
     pre_processers = []
 
     to_process = {
-        "comp_res_loc": ".\\resources\\physionet\\ltafdb.tar",
-        "ext_loc": ".\\resources\\physionet\\ltaf",
+        "comp_res_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\ltafdb.tar",
+        "ext_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\ltaf",
         "override_policy": True,
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "name":"LTAF",
         "target_label": 1,
-        "sampled_frequency":250,
+        "sampled_frequency":128,
         "target_frequency":256
     }
 
     pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_res_loc": ".\\resources\\physionet\\nsrdb.tar",
-        "ext_loc": ".\\resources\\physionet\\nsr",
+        "comp_res_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\nsrdb.tar",
+        "ext_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\nsr",
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "override_policy": True,
         "name":"NSR",
         "target_label": 0,
-        "sampled_frequency":250,
+        "sampled_frequency":128,
         "target_frequency":256
     }
 
     pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_res_loc": ".\\resources\\physionet\\fantasia.tar",
-        "ext_loc":".\\resources\\physionet\\fantasia",
+        "comp_res_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\fantasia.tar",
+        "ext_loc":"D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\fantasia",
         "headders": ['sample #', 'RESP', 'ECG'],
         "override_policy": True,
         "name":"Fantasia",
