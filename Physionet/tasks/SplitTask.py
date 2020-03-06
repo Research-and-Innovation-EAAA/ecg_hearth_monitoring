@@ -25,7 +25,7 @@ class SplitTask(Task.Task):
             splitter.start()
             splitter_threads.append(splitter)
 
-            if len(splitter_threads) > 12:
+            if len(splitter_threads) > 5:
                 for thread in splitter_threads:
                     thread.join()
                 

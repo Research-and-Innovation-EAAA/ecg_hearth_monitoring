@@ -4,7 +4,7 @@ import services.modifiers.Loader as loader
 
 class TrainingTask(Task.Task):
     def _setup(self, task_output):
-        self.training_readings = task_output["readings"]
+        self.training_readings = task_output['readings']
         
         ressources = os.dir_res_list(task_output["res_loc"])
         training_data = self._training_loc(task_output["res_loc"])
@@ -19,7 +19,7 @@ class TrainingTask(Task.Task):
         ressources, training_data, backup = self._setup(task_output)
 
         with open(training_data, 'w') as training:
-            if os.is_path_file(backup):
+            if backup is not None and os.is_path_file(backup):
                 self._merge_training(training, backup)
             else:
                 headders = self._get_headders(task_output["readings"])
@@ -65,11 +65,15 @@ class TrainingTask(Task.Task):
 
             res_path = os.path_join(path, res_elem)
 
+            print(res_path)
+
             temp_data = loader.load_data(res_path)
 
             if self._is_missing_inputs(len(temp_data.values)):
                 os.remove_file(res_path)
                 continue
+
+            print(len(temp_data.values))
 
             training_data = self._append_data_set(training_data, temp_data)
             file.write(training_data)
@@ -107,6 +111,8 @@ class TrainingTask(Task.Task):
             training_path = os.path_join(training_path, path_split[x])
 
         training_path = os.path_join(training_path, "training")
+
+        os.makedirs(training_path, True)
         
         return os.path_join(training_path, f"{path_split[len(path_split) - 1]}.csv")
 
