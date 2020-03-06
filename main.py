@@ -6,8 +6,8 @@ if __name__ == "__main__":
     pre_processers = []
 
     to_process = {
-        "comp_res_loc": ".\\resources\\physionet\\ltafdb.tar",
-        "ext_loc": ".\\resources\\physionet\\ltaf",
+        "comp_res_loc": "~\\data\\physionet\\ltafdb.tar",
+        "ext_loc": "~\\data\\physionet\\ltaf",
         "override_policy": True,
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "name":"LTAF",
@@ -19,8 +19,8 @@ if __name__ == "__main__":
     pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_res_loc": ".\\resources\\physionet\\nsrdb.tar",
-        "ext_loc": ".\\resources\\physionet\\nsr",
+        "comp_res_loc": "~\\data\\physionet\\nsrdb.tar",
+        "ext_loc": "~\\data\\physionet\\nsr",
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "override_policy": True,
         "name":"NSR",
@@ -32,8 +32,8 @@ if __name__ == "__main__":
     pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_res_loc": ".\\resources\\physionet\\fantasia.tar",
-        "ext_loc":".\\resources\\physionet\\fantasia",
+        "comp_res_loc": "~\\data\\physionet\\fantasia.tar",
+        "ext_loc":"~\\data\\physionet\\fantasia",
         "headders": ['sample #', 'RESP', 'ECG'],
         "override_policy": True,
         "name":"Fantasia",
