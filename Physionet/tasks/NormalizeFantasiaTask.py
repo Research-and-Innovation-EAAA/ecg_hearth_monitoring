@@ -4,7 +4,7 @@ import services.os.Operations as os
 
 class NormalizeFantasiaTask(task.Task):
     def exec(self, task_input, task_output):
-        res_name = task_output["res_loc"].split("\\")
+        res_name = task_output["res_loc"].split("/")
 
         if res_name[-1] != "fantasia":
             return
