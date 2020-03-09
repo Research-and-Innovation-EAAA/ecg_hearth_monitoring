@@ -99,9 +99,9 @@ class TrainingTask(Task.Task):
         print("Does nothing")
     
     def _training_loc(self, res_loc):
-        path_split = res_loc.split("\\")
+        path_split = res_loc.split("/")
 
-        training_path = f"{path_split[0]}\\{path_split[1]}"
+        training_path = f"{path_split[0]}/{path_split[1]}"
 
         for x in range(2, len(path_split) - 1):
             training_path = os.path_join(training_path, path_split[x])

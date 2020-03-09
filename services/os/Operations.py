@@ -21,9 +21,9 @@ def makedirs(path, override=False):
     os.makedirs(path, exist_ok=override)
 
 def copy_file(res_path, copy_name):
-    res_path_splitted = res_path.split("\\")
+    res_path_splitted = res_path.split("/")
 
-    copy_path = f"{res_path_splitted[0]}\\{res_path_splitted[1]}"
+    copy_path = f"{res_path_splitted[0]}/{res_path_splitted[1]}"
 
     for x in range(2, len(res_path_splitted)- 1):
         copy_path = path_join(copy_path, res_path_splitted[x])

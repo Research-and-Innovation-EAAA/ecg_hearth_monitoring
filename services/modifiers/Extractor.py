@@ -18,7 +18,7 @@ def __prepare_ext_loc():
     os.makedirs(path, exist_ok=True)
 
 def __zip_extract(com_res_path, ext_loc, override):
-    split_path = com_res_path.split('\\')
+    split_path = com_res_path.split('/')
  
     if ext_loc is None:
         __prepare_ext_loc()
@@ -31,7 +31,7 @@ def __zip_extract(com_res_path, ext_loc, override):
         com_file.extractall(ext_loc)
 
 def __tar_extract(com_res_path, ext_loc, override):
-    split_path = com_res_path.split('\\')
+    split_path = com_res_path.split('/')
     
     if ext_loc is None:
         __prepare_ext_loc()
