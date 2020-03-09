@@ -1,4 +1,5 @@
 import Physionet.DataProcessor as pdp
+import Physionet.TrainingConcatPipeline as tcp
 
 if __name__ == "__main__":
     pipeline = pdp.setup_pipeline(7500, 0.8, 0.2)
@@ -45,4 +46,13 @@ if __name__ == "__main__":
 
     for pre_proces_elem in pre_processers:
         pre_proces_elem.join()
+
+    to_process = {
+        "training":"/data",
+        "name":"Prep training and test data",
+        "concat_rate": 0.2
+    }
     
+    prep_train_test_data = tcp.setup_pipeline()
+
+    prep_train_test_data.execute(to_process).join()
