@@ -42,17 +42,8 @@ if __name__ == "__main__":
         "sampled_frequency":250,
         "target_frequency":256
     }
+
     pre_processers.append(pipeline.execute(to_process))
 
     for pre_proces_elem in pre_processers:
         pre_proces_elem.join()
-
-    to_process = {
-        "training":"/data/machinelearning/data/training",
-        "name":"Prep training and test data",
-        "concat_rate": 0.2
-    }
-    
-    prep_train_test_data = tcp.setup_pipeline()
-
-    prep_train_test_data.execute(to_process).join()

@@ -4,9 +4,10 @@ import services.os.Operations as os
 
 class NormalizeFantasiaTask(task.Task):
     def exec(self, task_input, task_output):
-        res_name = task_output["res_loc"].split("/")
+        #res_name = task_output["res_loc"].split("/")
+        is_not_fantasia = task_output["res_loc"][-len("fantasia"):] != "fantasia"
 
-        if res_name[-1] != "fantasia":
+        if is_not_fantasia:
             return
 
         ressources = os.dir_res_list(task_output["res_loc"])

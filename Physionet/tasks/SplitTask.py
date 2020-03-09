@@ -30,7 +30,7 @@ class SplitTask(Task.Task):
                     thread.join()
                 
                 splitter_threads = []
-        
+            
         for thread in splitter_threads:
             thread.join()
     
@@ -42,7 +42,7 @@ class _Splitter(threading.Thread):
         threading.Thread.__init__(self)
 
         self.containing_folder = res_path
-        self.res_name = res_name[:-4]
+        self.res_name = res_name.split('.')[0]
         self.res_path = res_path
         self.readings = readings
     
@@ -81,7 +81,7 @@ class _Splitter(threading.Thread):
             split_index += 1
 
     def _prep_split_folder(self):
-        os.makedirs(self.res_path[:-4], True)
+        os.makedirs(self.res_path.split('.')[0], True)
     
     def _prep_headers(self, file):
         headers = file.readline().split(',')
