@@ -7,8 +7,8 @@ if __name__ == "__main__":
     pre_processers = []
 
     to_process = {
-        "comp_res_loc": "~/data/ltafdb.tar",
-        "ext_loc": "~/data/ltaf",
+        "comp_res_loc": "/data/machinelearning/data/ltafdb.tar",
+        "ext_loc": "/data/machinelearning/data/ltaf",
         "override_policy": True,
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "name":"LTAF",
@@ -20,8 +20,8 @@ if __name__ == "__main__":
     pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_res_loc": "~/data/nsrdb.tar",
-        "ext_loc": "~/data/nsr",
+        "comp_res_loc": "/data/machinelearning/data/nsrdb.tar",
+        "ext_loc": "/data/machinelearning/data/nsr",
         "headders": ['sample #', 'ECG 1', 'ECG 2'],
         "override_policy": True,
         "name":"NSR",
@@ -33,8 +33,8 @@ if __name__ == "__main__":
     pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_res_loc": "~/data/fantasia.tar",
-        "ext_loc":"~/data/fantasia",
+        "comp_res_loc": "/data/machinelearning/data/fantasia.tar",
+        "ext_loc":"/data/machinelearning/data/fantasia",
         "headders": ['sample #', 'RESP', 'ECG'],
         "override_policy": True,
         "name":"Fantasia",
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         pre_proces_elem.join()
 
     to_process = {
-        "training":"~/data/training",
+        "training":"/data/machinelearning/data/training",
         "name":"Prep training and test data",
         "concat_rate": 0.2
     }
