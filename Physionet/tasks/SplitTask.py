@@ -72,7 +72,7 @@ class _Splitter(threading.Thread):
                 
                 index_at += 1
             
-            split_path = os.path_join(self.containing_folder[:-3], f"{self.readings}_ecg_split_{split_index}.csv")
+            split_path = os.path_join(self.containing_folder.split('.')[0], f"{self.readings}_ecg_split_{split_index}.csv")
 
             split_thread = _Save_split(readings, headers, split_path)
 
