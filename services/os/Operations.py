@@ -1,4 +1,5 @@
 import os
+import platform
 
 def path_join(*args):
     path = ""
@@ -46,3 +47,13 @@ def remove_file(path):
 
 def remove_dir(path):
     os.rmdir(path)
+
+def get_ressource_path_name(path):
+    os_env = platform.system()
+
+    if os_env == 'Windows':
+        splitted_path = path.split('\\')
+    elif os_env == 'Linux':
+        splitted_path = path.split('/')
+    
+    return splitted_path[len(splitted_path) - 1]
