@@ -14,23 +14,19 @@ class DataPrepTask(task.Task):
 
         workers = []
 
-        index = 0
-
         for elem in resources:
             res_path = os.path_join(path, elem)
 
-            if index == 0 and os.is_path_file(res_path):
+            if os.is_path_file(res_path):
                 splitted_elem = elem.split('.')
                 
                 backup_name = f"{splitted_elem[0]}.bak"
-                backup_path = os.path_join(path, backup_name)
 
-                worker = DataPreparerWorker(res_path, backup_name, backup_path)
+                worker = DataPreparerWorker(res_path, backup_name)
 
                 worker.start()
 
                 workers.append(worker)
-                index += 1
 
         for worker in workers:
             worker.join()
@@ -41,18 +37,17 @@ class DataPrepTask(task.Task):
         pass
 
 class DataPreparerWorker(threading.Thread):
-    def __init__(self, path, backup_name, backup_path):
+    def __init__(self, path, backup_name):
         threading.Thread.__init__(self)
 
         self.res_path = path
         self.backup_name = backup_name
-        self.backup_path = backup_path
     
     def run(self):
         backup_path = os.copy_file(self.res_path, self.backup_name)
 
         with open(self.res_path, 'w') as data_file:
-            with open(self.backup_path) as backup:
+            with open(backup_path) as backup:
                 data = backup.read()
 
             splitted_data = data.split("\n")
@@ -63,12 +58,12 @@ class DataPreparerWorker(threading.Thread):
                 try:
                     reading = self.get_reading_value(elem)
 
-                    print(reading)
-
                     if reading != None:
                         data_file.write(f"{reading}\n")
-                except Exception:
-                    print("DO NOT BREAK")
+                except:
+                    pass
+        
+        os.remove_file(backup_path)
     
     def get_reading_value(self, element):
         try:
