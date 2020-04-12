@@ -1,7 +1,9 @@
 import Physionet.DataProcessor as pdp
 import Physionet.TrainingConcatPipeline as tcp
 
-import ML.Pipeline as clad
+import AppleWatch.Pipeline as applePipe
+
+#import ML.Pipeline as clad
 
 if __name__ == '__main__':
     target_frequency = 510
@@ -53,9 +55,14 @@ if __name__ == '__main__':
     #pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
-        "comp_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\export.zip",
-        "labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training"
+        "comp_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\eksport.zip",
+        "labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training",
+        "name": "Apple Watch data preprocessing"
     }
+
+    apple_process = applePipe.setup()
+
+    pre_processers.append(apple_process.execute(to_process))
 
     for pre_proces_elem in pre_processers:
         pre_proces_elem.join()
@@ -76,7 +83,7 @@ if __name__ == '__main__':
         "verbose":0
     }
 
-    pipeline = clad.setup()
+    #pipeline = clad.setup()
 
     #t = pipeline.execute(to_process)
 

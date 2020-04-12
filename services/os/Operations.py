@@ -22,9 +22,14 @@ def makedirs(path, override=False):
     os.makedirs(path, exist_ok=override)
 
 def copy_file(res_path, copy_name):
-    res_path_splitted = res_path.split("/")
+    os_env = platform.system()
 
-    copy_path = f"{res_path_splitted[0]}/{res_path_splitted[1]}"
+    res_path_splitted = res_path.split(os.path.sep)
+
+    if os_env == "Windows":
+        copy_path = f"{res_path_splitted[0][0:2]}{os.path.sep}{res_path_splitted[0][2:]}{os.path.sep}{res_path_splitted[1]}"
+    else:
+        copy_path = f"{res_path_splitted[0]}{os.path.sep}{res_path_splitted[1]}"
 
     for x in range(2, len(res_path_splitted)- 1):
         copy_path = path_join(copy_path, res_path_splitted[x])

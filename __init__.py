@@ -1,1 +1,1 @@
-__all__=["services", "Physionet"]
+__all__=["services", "Physionet", "AppleWatch"]

@@ -6,7 +6,7 @@
             "name": "Main program",
             "type": "python",
             "request": "launch",
-            "program": "C:\\Users\\mabh\\Desktop\\Workspace_development\\ECG Hearth Monitoring\\__main__.py",
+            "program": "F:\\Praktik EAAA\\ecg_hearth_monitoring\\__main__.py",
             "console": "integratedTerminal"
         }
     ]

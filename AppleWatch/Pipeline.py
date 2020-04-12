@@ -8,7 +8,7 @@ import AppleWatch.tasks.PrepLabelsTask as plt
 def setup():
     tasks = [
         et.ExtractorTask(),
-        dpt.DataPrepTask();
+        dpt.DataPrepTask(),
 
         plt.PrepLabelsTask()
     ]
