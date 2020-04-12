@@ -14,10 +14,12 @@ class DataPrepTask(task.Task):
 
         workers = []
 
+        index = 0
+
         for elem in resources:
             res_path = os.path_join(path, elem)
 
-            if os.is_path_file(res_path):
+            if index == 0 and os.is_path_file(res_path):
                 splitted_elem = elem.split('.')
                 
                 backup_name = f"{splitted_elem[0]}.bak"
@@ -28,6 +30,7 @@ class DataPrepTask(task.Task):
                 worker.start()
 
                 workers.append(worker)
+                index += 1
 
         for worker in workers:
             worker.join()
@@ -46,7 +49,7 @@ class DataPreparerWorker(threading.Thread):
         self.backup_path = backup_path
     
     def run(self):
-        os.copy_file(self.res_path, self.backup_name)
+        backup_path = os.copy_file(self.res_path, self.backup_name)
 
         with open(self.res_path, 'w') as data_file:
             with open(self.backup_path) as backup:
@@ -58,8 +61,32 @@ class DataPreparerWorker(threading.Thread):
 
             for elem in splitted_data:
                 try:
-                    reading = int(elem)
+                    reading = self.get_reading_value(elem)
 
-                    data_file.write(f"{reading}\n")
-                except Exception as e:
-                    print(e)
+                    print(reading)
+
+                    if reading != None:
+                        data_file.write(f"{reading}\n")
+                except Exception:
+                    print("DO NOT BREAK")
+    
+    def get_reading_value(self, element):
+        try:
+            return float(element)
+        except:
+            pass
+        
+        splitted_elem = element.split(',')
+
+        if len(splitted_elem) == 2:
+            try:
+                integer_split = int(splitted_elem[0])
+                floating_points_split = int(splitted_elem[1])
+
+                integer_value = float(f"{integer_split}.{floating_points_split}")
+            except Exception as e:
+                raise Exception(e)
+        
+            return integer_value
+        
+        return None
