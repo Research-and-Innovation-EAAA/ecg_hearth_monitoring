@@ -57,3 +57,6 @@ def get_ressource_path_name(path):
         splitted_path = path.split('/')
     
     return splitted_path[len(splitted_path) - 1]
+
+def get_path_seperator():
+    return os.path.sep
