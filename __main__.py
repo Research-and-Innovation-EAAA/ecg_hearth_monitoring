@@ -7,7 +7,8 @@ import AppleWatch.Pipeline as applePipe
 
 if __name__ == '__main__':
     target_frequency = 510
-    readings = 7500
+    #readings = 7500
+    readings = 13361
     training_split = 0.8
     test_split = 0.2
 
@@ -56,8 +57,10 @@ if __name__ == '__main__':
 
     to_process = {
         "comp_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\eksport.zip",
-        "labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training",
-        "name": "Apple Watch data preprocessing"
+        "training_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training",
+        "name": "Apple Watch data preprocessing",
+        "labels_information_location": "F:\\Praktik EAAA\\ecg_hearth_monitoring\\resources\\mappings.json",
+        "readings": readings
     }
 
     apple_process = applePipe.setup()
