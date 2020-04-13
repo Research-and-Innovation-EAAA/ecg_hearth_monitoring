@@ -37,7 +37,7 @@ class ReadingsPruneTask(task.Task):
         readings = []
 
         for elem in resources:
-            readings.append(self.count(os.path_join(resources, elem)))
+            readings.append(self.count(os.path_join(path, elem)))
         
         min_reading = readings[0]
 
@@ -61,7 +61,7 @@ class ReadingsPruneTask(task.Task):
     
 class NormalizeReadingsCountWorker(threading.Thread):
     def __init__(self, path, readings, backup_name_index):
-        threading.Thread(self)
+        threading.Thread.__init__(self)
 
         self.readings = readings
         self.path = path

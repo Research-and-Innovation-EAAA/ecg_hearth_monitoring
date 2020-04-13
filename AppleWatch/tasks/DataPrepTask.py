@@ -31,8 +31,8 @@ class DataPrepTask(task.Task):
         for worker in workers:
             worker.join()
         
-        task_output["res_loc"]
-
+        task_output["res_loc"] = path
+        
     def reverse(self, task_input, task_output):
         pass
 
