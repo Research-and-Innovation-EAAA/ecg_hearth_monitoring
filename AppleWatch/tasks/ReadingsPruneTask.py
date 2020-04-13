@@ -87,6 +87,8 @@ class NormalizeReadingsCountWorker(threading.Thread):
                 while index < self.readings and data_reading != "":
                     data_file.write(data_reading)
 
+                    data_reading = backup_file.readline()
+
                     index += 1
         
         os.remove_file(backup)
