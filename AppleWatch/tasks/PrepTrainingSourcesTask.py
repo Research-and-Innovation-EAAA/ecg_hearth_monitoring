@@ -5,7 +5,7 @@ import services.os.Operations as os
 
 class PrepTrainingSourcesTask(task.Task):
     def exec(self, task_input, task_output):
-        labels_information_loc = task_input["labels_information_loc"]
+        labels_information_loc = task_input["labels_information_location"]
         resources_path = task_output["res_loc"]
 
         labels_info = jReader.parse_data(labels_information_loc)
@@ -49,7 +49,7 @@ class PrepTrainingSourcesTask(task.Task):
         for label_info in labels_info["mappings"]:
             resource = self.get_resource(label_info["file_name"], resources)
 
-            medical_condition = labels_info["medical_condition"]
+            medical_condition = label_info["medical_condition"]
 
             if resource != None and (medical_condition == "Sinusrytme" or medical_condition == "Artrieflimren"):
                 with open(os.path_join(resources_loc, resource)) as data_file:
@@ -66,6 +66,8 @@ class PrepTrainingSourcesTask(task.Task):
 
                         if reading != "":
                             training_writer.write(',')
+                
+                training_writer.write("\n")
                 
                 if medical_condition == "Sinusrytme":
                     labels_writer.write("1,0\n")

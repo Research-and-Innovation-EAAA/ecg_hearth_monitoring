@@ -23,6 +23,18 @@ class PadReadingsTask(task.Task):
                     sampling_nr = 1
 
                     while temp_reading != "":
+                        temp_reading = backup_file.readline()
+
+                        if temp_reading != "":
+                            splitted = temp_reading.split(',')
+
+                            file.write(f"{sampling_nr},{splitted[1]},{splitted[2]}")
+
+                            if "f2" in res_elem:
+                                file.write("\n")
+
+                        sampling_nr += 1
+
                         for _ in range(1, doubling_rate):
                             temp_reading = backup_file.readline()
 
@@ -30,15 +42,27 @@ class PadReadingsTask(task.Task):
                                 splitted = temp_reading.split(',')
 
                                 file.write(f"{sampling_nr},{splitted[1]},{splitted[2]}")
+                                
+                                if "f2" in res_elem:
+                                    file.write("\n")
 
                             sampling_nr += 1
                         
                         if temp_reading != "":
                             splitted = temp_reading.split(',')
                             file.write(f"{sampling_nr},{splitted[1]},{splitted[2]}")
+                            
+                            if "f2" in res_elem:
+                                file.write("\n")
+
                             sampling_nr += 1
                             splitted = temp_reading.split(',')
                             file.write(f"{sampling_nr},{splitted[1]},{splitted[2]}")
+
+                            
+                            if "f2" in res_elem:
+                                file.write("\n")
+
                             sampling_nr += 1
                         
                         temp_reading = backup_file.readline()
