@@ -14,9 +14,9 @@ class LabelTask(task.Task):
         print("Label task reverse  does nothing!")
     
     def _calc_labels_loc(self, path):
-        splitted = path.split("/")
+        splitted = path.split(os.get_path_seperator())
 
-        label_path = f"{splitted[0]}/{splitted[1]}"
+        label_path = f"{splitted[0]}{os.get_path_seperator()}{splitted[1]}"
 
         for path_elem in range(2, len(splitted) - 1):
             label_path = os.path_join(label_path, splitted[path_elem])

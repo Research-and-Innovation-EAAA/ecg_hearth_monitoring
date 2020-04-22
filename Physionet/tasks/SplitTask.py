@@ -106,7 +106,10 @@ class _Save_split(threading.Thread):
             file.write("readings\n")
 
             for reading in ecg_data:
-                file.write(f"{reading}\n")
+                if "f1" not in self.path:
+                    file.write(f"{reading}\n")
+                else:
+                    file.write(f"{reading}")#\n")
 
     def _calc_header_index(self):
         self.headers[2].split("\n")[0]
