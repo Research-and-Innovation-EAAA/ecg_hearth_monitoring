@@ -45,7 +45,7 @@ class ReadingsPruneTask(task.Task):
             if elem < min_reading:
                 min_reading = elem
 
-        return min_reading
+        return min_reading - 1
 
     def count(self, path):
         count = 0
@@ -90,5 +90,7 @@ class NormalizeReadingsCountWorker(threading.Thread):
                     data_reading = backup_file.readline()
 
                     index += 1
+
+                print(f"Index at {index}")
         
         os.remove_file(backup)

@@ -7,10 +7,11 @@ import Physionet.ML_sets.Pipeline as training_pipeline
 
 import ML.Pipeline as clad
 
+import ML.Evaluate_pipeline as ep
+
 if __name__ == '__main__':
     target_frequency = 510
-    #readings = 7500
-    readings = 13361
+    readings = 13360
     training_split = 0.8
     test_split = 0.2
 
@@ -29,7 +30,7 @@ if __name__ == '__main__':
         "target_frequency": target_frequency
     }
 
-    pre_processers.append(pipeline.execute(to_process))
+    #pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
         "comp_res_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\nsrdb.tar",
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         "target_frequency": target_frequency
     }
 
-    pre_processers.append(pipeline.execute(to_process))
+    #pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
         "comp_res_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\fantasia.tar",
@@ -55,7 +56,7 @@ if __name__ == '__main__':
         "target_frequency": target_frequency
     }
 
-    pre_processers.append(pipeline.execute(to_process))
+    #pre_processers.append(pipeline.execute(to_process))
 
     to_process = {
         "comp_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\eksport.zip",
@@ -65,9 +66,9 @@ if __name__ == '__main__':
         "readings": readings
     }
 
-    apple_process = applePipe.setup()
+    #apple_process = applePipe.setup()
 
-    pre_processers.append(apple_process.execute(to_process))
+    #pre_processers.append(apple_process.execute(to_process))
 
     for pre_proces_elem in pre_processers:
         pre_proces_elem.join()
@@ -89,19 +90,19 @@ if __name__ == '__main__':
         "test_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\test.csv"
     }
 
-    worker = training_pipe.execute(to_process)
+    #worker = training_pipe.execute(to_process)
 
-    worker.join()
+    #worker.join()
     
     to_process = {
-        "name":"Load ML data",
+        "name":"Prep ML model",
         "training_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\training.csv",
         "training_labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\training_labels.csv",
         "test_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\test.csv",
         "test_labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\test_labels.csv",
         "model_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\model.hdf5",
         "log": True,
-        "inputs": 13361,
+        "inputs": readings,
         "epochs": 5,
         "sass": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99],
         "optimizer": "adam",
@@ -112,6 +113,20 @@ if __name__ == '__main__':
 
     pipeline = clad.setup()
 
-    t = pipeline.execute(to_process)
+    #t = pipeline.execute(to_process)
 
-    t.join()
+    #t.join()
+
+    to_process = {
+        "model_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\model.hdf5\\model-13360",
+        "name": "Model evaluation and generalization on external data",
+        "compile": True,
+        "apple_data_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\training.csv",
+        "apple_labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\labels.csv",
+        "apple_evaluation": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\eval.txt",
+        "log": True
+    }
+
+    pipeline = ep.setup()
+
+    pipeline.execute(to_process)

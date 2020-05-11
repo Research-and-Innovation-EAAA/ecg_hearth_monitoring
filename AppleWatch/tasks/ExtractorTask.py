@@ -23,9 +23,9 @@ class ExtractorTask(task.Task):
     def extract_loc(self, compressed_resource):
         splitted_path = compressed_resource.split(os.get_path_seperator())
 
-        index = 0
+        index = 2
 
-        path = ""
+        path = f"{splitted_path[0]}{os.get_path_seperator()}{splitted_path[1]}"
 
         while index < (len(splitted_path) - 1):
             path = os.path_join(path, splitted_path[index])

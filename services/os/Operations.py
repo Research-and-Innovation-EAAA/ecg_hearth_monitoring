@@ -26,10 +26,12 @@ def copy_file(res_path, copy_name):
 
     res_path_splitted = res_path.split(os.path.sep)
 
-    if os_env == "Windows":
-        copy_path = f"{res_path_splitted[0][0:2]}{os.path.sep}{res_path_splitted[0][2:]}{os.path.sep}{res_path_splitted[1]}"
-    else:
-        copy_path = f"{res_path_splitted[0]}{os.path.sep}{res_path_splitted[1]}"
+    copy_path = f"{res_path_splitted[0]}{get_path_seperator()}{res_path_splitted[1]}"
+
+    #if os_env == "Windows":
+    #    copy_path = f"{res_path_splitted[0][0:2]}{os.path.sep}{res_path_splitted[0][2:]}{os.path.sep}{res_path_splitted[1]}"
+    #else:
+    #    copy_path = f"{res_path_splitted[0]}{os.path.sep}{res_path_splitted[1]}"
 
     for x in range(2, len(res_path_splitted)- 1):
         copy_path = path_join(copy_path, res_path_splitted[x])

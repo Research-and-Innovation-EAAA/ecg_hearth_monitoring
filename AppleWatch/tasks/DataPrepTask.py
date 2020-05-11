@@ -54,14 +54,19 @@ class DataPreparerWorker(threading.Thread):
 
             data_file.write("readings\n")
 
+            index = 0
+
             for elem in splitted_data:
                 try:
                     reading = self.get_reading_value(elem)
 
                     if reading != None:
                         data_file.write(f"{reading}\n")
+                        index += 1
                 except:
                     pass
+
+            print(f"\n{len(splitted_data)} - index: {index}\n")
         
         os.remove_file(backup_path)
     

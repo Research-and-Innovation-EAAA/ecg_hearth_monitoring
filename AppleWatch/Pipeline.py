@@ -12,9 +12,8 @@ def setup():
         et.ExtractorTask(),
         dpt.DataPrepTask(),
         prt.ReadingsPruneTask(),
+
         ptst.PrepTrainingSourcesTask(),
-        
-        #plt.PrepLabelsTask()
     ]
 
     return pipeline.Pipeline(tasks)
