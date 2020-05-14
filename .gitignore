@@ -129,3 +129,8 @@ eksport.xml
 export_cda.xml
 *.txt
 *.docx
+/ecg_hearth_monitoring.pyproj
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/ecg_hearth_monitoring/v16/.suo
+/ecg_hearth_monitoring.sln
