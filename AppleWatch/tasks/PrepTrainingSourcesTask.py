@@ -27,6 +27,8 @@ class PrepTrainingSourcesTask(task.Task):
                     index += 1
                     if index < task_input["readings"]:
                         training_file.write(',')
+                
+                training_file.write("\n")
 
                 self.prep_training_file(training_file, labels_file, labels_info, task_output["res_loc"], resources)
 

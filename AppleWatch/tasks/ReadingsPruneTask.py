@@ -90,7 +90,5 @@ class NormalizeReadingsCountWorker(threading.Thread):
                     data_reading = backup_file.readline()
 
                     index += 1
-
-                print(f"Index at {index}")
         
         os.remove_file(backup)

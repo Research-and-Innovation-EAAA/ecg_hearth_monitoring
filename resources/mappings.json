@@ -285,7 +285,7 @@
         {
             "file_name":"ecg_2020-03-11_14.csv",
             "date_time":"11-03-2020 10.32",
-            "medical_condition":"10.32",
+            "medical_condition":"Sinusrytme",
             "software_version": 1.52,
             "sampling_frequence": 511.922
         },

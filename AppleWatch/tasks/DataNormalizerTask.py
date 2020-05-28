@@ -40,14 +40,16 @@ class DataNormalizer(threading.Thread):
             with open(backup_path) as data:
                 datafile.write(data.readline())
 
-                temp = datafile.readline()
+                temp = data.readline()
 
                 while temp != "":
-                    normalized_reading = self.data_reading_normalizer(data.readline())
+                    normalized_reading = self.data_reading_normalizer(temp)
 
-                    datafile.writeline(normalized_reading)
+                    datafile.write(normalized_reading)
 
                     temp = data.readline()
+
+        os.remove_file(backup_path)
 
     def data_reading_normalizer(self, reading):
         reading_value = float(reading.split('\n')[0])
@@ -55,4 +57,4 @@ class DataNormalizer(threading.Thread):
         while reading_value > 100.0:
             reading_value = reading_value - 100
 
-        return f"{reading_value}"
+        return f"{reading_value}\n"

@@ -65,8 +65,6 @@ class DataPreparerWorker(threading.Thread):
                         index += 1
                 except:
                     pass
-
-            print(f"\n{len(splitted_data)} - index: {index}\n")
         
         os.remove_file(backup_path)
     
