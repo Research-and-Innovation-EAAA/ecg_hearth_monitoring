@@ -66,9 +66,9 @@ if __name__ == '__main__':
         "readings": readings
     }
 
-    #apple_process = applePipe.setup()
+    apple_process = applePipe.setup()
 
-    #pre_processers.append(apple_process.execute(to_process))
+    pre_processers.append(apple_process.execute(to_process))
 
     for pre_proces_elem in pre_processers:
         pre_proces_elem.join()
@@ -118,12 +118,12 @@ if __name__ == '__main__':
     #t.join()
 
     to_process = {
-        "model_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\model.hdf5\\model-13360",
+        "model_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\physionet\\model.hdf5\\model-13360",
         "name": "Model evaluation and generalization on external data",
         "compile": True,
-        "apple_data_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\training.csv",
-        "apple_labels_loc": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\labels.csv",
-        "apple_evaluation": "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\eval.txt",
+        "apple_data_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\training.csv",
+        "apple_labels_loc": "D:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\labels.csv",
+        "apple_evaluation": "D:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\training\\preprocessed_eval.txt",
         "log": True
     }
 

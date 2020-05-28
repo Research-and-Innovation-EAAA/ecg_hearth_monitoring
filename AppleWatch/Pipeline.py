@@ -4,15 +4,14 @@ import AppleWatch.tasks.ExtractorTask as et
 import AppleWatch.tasks.DataPrepTask as dpt
 import AppleWatch.tasks.ReadingsPruneTask as prt
 import AppleWatch.tasks.PrepTrainingSourcesTask as ptst
-
-import AppleWatch.tasks.PrepLabelsTask as plt
+import AppleWatch.tasks.DataNormalizerTask as dnt
 
 def setup():
     tasks = [
         et.ExtractorTask(),
         dpt.DataPrepTask(),
         prt.ReadingsPruneTask(),
-
+        dnt.DataNormalizerTask(),
         ptst.PrepTrainingSourcesTask(),
     ]
 
