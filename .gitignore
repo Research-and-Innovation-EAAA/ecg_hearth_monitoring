@@ -129,3 +129,6 @@ eksport.xml
 export_cda.xml
 *.txt
 *.docx
+
+# For temp development
+API/
