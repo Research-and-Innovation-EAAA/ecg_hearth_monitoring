@@ -5,7 +5,8 @@ import os
 
 if __name__ == "__main__":
     #path = "G:\\Praktik Vinter-Forår 2020\\resources\\apple_watch\\eksport\\apple_health_export\\electrocardiograms"
-    path = "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\ltaf"
+    #path = "G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\ltaf"
+    path = "c:\\tmp"
 
     res_dir = os.listdir(path)
     
