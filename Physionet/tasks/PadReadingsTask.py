@@ -14,7 +14,8 @@ class PadReadingsTask(task.Task):
 
         for res_elem in res_elems:
             origin_path = os.path_join(task_output["res_loc"], res_elem)
-            backup_path = os.copy_file(origin_path, f"{task_input['name']}_bakup.bak")
+            if os.is_path_file(origin_path):
+                backup_path = os.copy_file(origin_path, f"{task_input['name']}_bakup.bak")
 
             with open(origin_path, 'w') as file:
                 with open(backup_path) as backup_file:
