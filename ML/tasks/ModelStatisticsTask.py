@@ -28,9 +28,11 @@ class ModelStatisticsTask(task.Task):
             ax2.plot(task_input["sass"], specificity)
             ax2.set(xlabel="Sensitivity", ylabel="Specificity")
 
-            fig.savefig(f"G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\plots\\{epoch}_plot.png")
+            plt.tight_layout()
+
+            fig.savefig(f"{epoch}_eval_plot.png")
         
-        with open(f"G:\\Praktik Vinter-Forår 2020\\resources\\physionet\\training\\plots\\data.txt", 'w') as to_save:
+        with open(f"eval_data.txt", 'w') as to_save:
             temp = model_training_history.history
 
             for key_elem in temp.keys():
